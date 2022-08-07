@@ -27,7 +27,16 @@ class Artist(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            # Generate a unique slug
+            count = 0
+            while True:
+                slug = slugify(self.name)
+                if count > 0:
+                    slug = f"{slug}-{count}"
+                if not Artist.objects.filter(slug=slug).exists():
+                    self.slug = slug
+                    break
+                count += 1
         return super().save(*args, **kwargs)
 
 
@@ -52,5 +61,14 @@ class Band(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            # Generate a unique slug
+            count = 0
+            while True:
+                slug = slugify(self.name)
+                if count > 0:
+                    slug = f"{slug}-{count}"
+                if not Band.objects.filter(slug=slug).exists():
+                    self.slug = slug
+                    break
+                count += 1
         return super().save(*args, **kwargs)

@@ -1,10 +1,26 @@
 from rest_framework.viewsets import ModelViewSet
-from .models import Track
-from .serializers import TrackSerializer
+from . import models
+from . import serializers
 
 
 class TrackViewSet(ModelViewSet):
-    queryset = Track.objects.select_related(
+    queryset = models.Track.objects.select_related(
         'album_id', 'created_by', 'updated_by').all()
-    serializer_class = TrackSerializer
+    serializer_class = serializers.TrackSerializer
     lookup_field = 'slug'
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return serializers.SimpleTrackSerializer
+        return serializers.TrackSerializer
+
+
+class FeaturedAuthorViewSet(ModelViewSet):
+    queryset = models.FeaturedAuthor.objects.select_related(
+        'track_id',
+        'artist_id',
+        'band_id',
+        'created_by',
+        'updated_by'
+    ).all()
+    serializer_class = serializers.FeaturedAuthorSerializer

@@ -44,5 +44,14 @@ class Album(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            # Generate a unique slug
+            count = 0
+            while True:
+                slug = slugify(self.title)
+                if count > 0:
+                    slug = f"{slug}-{count}"
+                if not Album.objects.filter(slug=slug).exists():
+                    self.slug = slug
+                    break
+                count += 1
         return super().save(*args, **kwargs)

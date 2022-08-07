@@ -7,9 +7,13 @@ from .components.track import views as track_views
 
 router = routers.DefaultRouter()
 router.register('album', album_views.AlbumViewSet, basename='album')
-router.register('track', track_views.TrackViewSet, basename='track')
+
 router.register('artist', author_views.ArtistViewSet, basename='artist')
 router.register('band', author_views.BandViewSet, basename='band')
+
+router.register('track', track_views.TrackViewSet, basename='track')
+router.register(
+    'featured-author', track_views.FeaturedAuthorViewSet, basename='featured-author')
 
 urlpatterns = router.urls
 
