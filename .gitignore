@@ -1,6 +1,5 @@
-react/node_modules
 .env
-media/
+images/
 __pycache__/
 *.py[cod]
 *$py.class

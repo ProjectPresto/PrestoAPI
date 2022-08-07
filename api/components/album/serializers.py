@@ -6,14 +6,14 @@ class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
         fields = '__all__'
-        read_only_fields = ['created_at',
-                            'created_by', 'updated_at', 'updated_by']
+        read_only_fields = [
+            'slug',
+            'created_at',
+            'updated_at',
+        ]
+        lookup_field = 'slug'
         extra_kwargs = {
-            'slug': {'required': False},
-            'release_date': {'required': False},
-            'release_type': {'required': False},
-            'art_cover': {'required': False},
-            'art_cover_url': {'required': False},
+            'url': {'lookup_field': 'slug'},
             'created_by': {'default': serializers.CurrentUserDefault()},
             'updated_by': {'default': serializers.CurrentUserDefault()},
         }
