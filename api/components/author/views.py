@@ -4,12 +4,12 @@ from .serializers import ArtistSerializer, BandSerializer
 
 
 class ArtistViewSet(ModelViewSet):
-    queryset = Artist.objects.all()
+    queryset = Artist.objects.select_related('created_by', 'updated_by').all()
     serializer_class = ArtistSerializer
     lookup_field = 'slug'
 
 
 class BandViewSet(ModelViewSet):
-    queryset = Band.objects.all()
+    queryset = Band.objects.select_related('created_by', 'updated_by').all()
     serializer_class = BandSerializer
     lookup_field = 'slug'

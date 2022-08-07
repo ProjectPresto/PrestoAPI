@@ -4,7 +4,7 @@ from django.template.defaultfilters import slugify
 from django_resized import ResizedImageField
 
 from ...helpers.RenameImageToSlug import RenameImageToSlug
-from ..authors.models import Artist, Band
+from ..author.models import Artist, Band
 
 
 class Album(models.Model):
