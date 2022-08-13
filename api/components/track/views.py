@@ -5,7 +5,7 @@ from . import serializers
 
 class TrackViewSet(ModelViewSet):
     queryset = models.Track.objects.select_related(
-        'album_id', 'created_by', 'updated_by').all()
+        'album', 'created_by', 'updated_by').all()
     serializer_class = serializers.TrackSerializer
     lookup_field = 'slug'
 
@@ -17,10 +17,5 @@ class TrackViewSet(ModelViewSet):
 
 class FeaturedAuthorViewSet(ModelViewSet):
     queryset = models.FeaturedAuthor.objects.select_related(
-        'track_id',
-        'artist_id',
-        'band_id',
-        'created_by',
-        'updated_by'
-    ).all()
+        'track', 'artist', 'band', 'created_by', 'updated_by').all()
     serializer_class = serializers.FeaturedAuthorSerializer

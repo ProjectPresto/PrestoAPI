@@ -24,10 +24,10 @@ class Album(models.Model):
     release_date = models.DateField()
     release_type = models.CharField(
         max_length=11, choices=RELEASE_TYPE_ALBUM_CHOICES, null=False, default="LP")
-    artist_id = models.ForeignKey(
-        Artist, on_delete=models.PROTECT, null=True, related_name="artist_album")
-    band_id = models.ForeignKey(
-        Band, on_delete=models.PROTECT, null=True, related_name="band_album")
+    artist = models.ForeignKey(
+        Artist, on_delete=models.PROTECT, null=True)
+    band = models.ForeignKey(
+        Band, on_delete=models.PROTECT, null=True)
     art_cover = ResizedImageField(
         size=[720, 720], upload_to=RenameImageToSlug("album/"), max_length=255, null=True)
     art_cover_url = models.URLField(max_length=2048, null=True)

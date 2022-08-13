@@ -4,6 +4,7 @@ from rest_framework_nested import routers
 from .components.album import views as album_views
 from .components.author import views as author_views
 from .components.track import views as track_views
+from .components.genre import views as genre_views
 
 router = routers.DefaultRouter()
 router.register('album', album_views.AlbumViewSet, basename='album')
@@ -14,6 +15,10 @@ router.register('band', author_views.BandViewSet, basename='band')
 router.register('track', track_views.TrackViewSet, basename='track')
 router.register(
     'featured-author', track_views.FeaturedAuthorViewSet, basename='featured-author')
+
+router.register('genre', genre_views.GenreViewSet, basename='genre')
+router.register('album-genre', genre_views.AlbumGenreViewSet,
+                basename='album-genre')
 
 urlpatterns = router.urls
 

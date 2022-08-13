@@ -1,12 +1,14 @@
 from rest_framework import serializers
+
 from .models import Album
 from ..author.serializers import ArtistSerializer, BandSerializer
 from ..track.serializers import SimpleTrackSerializer
+from ..genre.serializers import SimpleGenreSerializer
 
 
 class SimpleAlbumSerializer(serializers.ModelSerializer):
-    artist = ArtistSerializer(source="artist_id", read_only=True)
-    band = BandSerializer(source="band_id", read_only=True)
+    artist = ArtistSerializer(read_only=True)
+    band = BandSerializer(read_only=True)
 
     class Meta:
         model = Album
@@ -28,9 +30,11 @@ class SimpleAlbumSerializer(serializers.ModelSerializer):
 
 
 class AlbumSerializer(serializers.ModelSerializer):
-    artist = ArtistSerializer(source="artist_id", read_only=True)
-    band = BandSerializer(source="band_id", read_only=True)
+    artist = ArtistSerializer(read_only=True)
+    band = BandSerializer(read_only=True)
     tracks = SimpleTrackSerializer(many=True, read_only=True)
+    genres = serializers.StringRelatedField(
+        many=True, read_only=True, source='album_genres')
 
     class Meta:
         model = Album
@@ -45,6 +49,7 @@ class AlbumSerializer(serializers.ModelSerializer):
             'artist',
             'band',
             'tracks',
+            'genres',
             'created_at',
             'created_by',
             'updated_at',

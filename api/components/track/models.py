@@ -9,7 +9,7 @@ from ..author.models import Artist, Band
 class Track(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    album_id = models.ForeignKey(
+    album = models.ForeignKey(
         Album, on_delete=models.CASCADE, null=False, related_name="tracks")
     position = models.PositiveIntegerField(null=True)
     duration = models.DurationField(null=True)
@@ -41,10 +41,10 @@ class Track(models.Model):
 
 
 class FeaturedAuthor(models.Model):
-    track_id = models.ForeignKey(
+    track = models.ForeignKey(
         Track, on_delete=models.CASCADE, null=False, related_name="featured_authors")
-    artist_id = models.ForeignKey(Artist, null=True, on_delete=models.CASCADE)
-    band_id = models.ForeignKey(Band, null=True, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, null=True, on_delete=models.CASCADE)
+    band = models.ForeignKey(Band, null=True, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(

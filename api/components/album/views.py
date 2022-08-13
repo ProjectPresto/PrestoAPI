@@ -5,7 +5,7 @@ from . import serializers
 
 class AlbumViewSet(ModelViewSet):
     queryset = models.Album.objects.select_related(
-        'artist_id', 'band_id', 'created_by', 'updated_by').all()
+        'artist', 'band', 'created_by', 'updated_by').all()
     lookup_field = 'slug'
 
     def get_serializer_class(self):
