@@ -43,6 +43,8 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class AlbumGenreSerializer(serializers.ModelSerializer):
+    genre = SimpleGenreSerializer()
+
     class Meta:
         model = AlbumGenre
         fields = ['id', 'album', 'genre']

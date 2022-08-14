@@ -33,10 +33,6 @@ class SimpleTrackSerializer(serializers.ModelSerializer):
             'position',
             'duration',
         ]
-        lookup_field = 'slug'
-        extra_kwargs = {
-            'url': {'lookup_field': 'slug'},
-        }
 
 
 class TrackSerializer(serializers.ModelSerializer):

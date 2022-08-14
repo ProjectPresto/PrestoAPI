@@ -39,6 +39,18 @@ class ArtistSerializer(serializers.ModelSerializer):
             return super().save(updated_by=user, **kwargs)
 
 
+class SimpleArtistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Artist
+        fields = [
+            'id',
+            'name',
+            'slug',
+            'bg_image',
+            'bg_image_url',
+        ]
+
+
 class BandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Band
@@ -72,6 +84,18 @@ class BandSerializer(serializers.ModelSerializer):
             return super().save(created_by=user, updated_by=user, **kwargs)
         else:
             return super().save(updated_by=user, **kwargs)
+
+
+class SimpleBandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Band
+        fields = [
+            'id',
+            'name',
+            'slug',
+            'bg_image',
+            'bg_image_url',
+        ]
 
 
 class BandMemberSerializer(serializers.ModelSerializer):

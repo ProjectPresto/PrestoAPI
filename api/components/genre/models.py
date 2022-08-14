@@ -36,4 +36,4 @@ class AlbumGenre(models.Model):
         unique_together = ('album', 'genre')
 
     def __str__(self) -> str:
-        return f"{self.album} - {self.genre}"
+        return f"{self.genre}"

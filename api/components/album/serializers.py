@@ -2,16 +2,17 @@ from rest_framework import serializers
 from django.template.defaultfilters import slugify
 
 from .models import Album
-from ..author.serializers import ArtistSerializer, BandSerializer
+from ..author import serializers as author_serializers
 from ..track.serializers import SimpleTrackSerializer
+from ..genre.serializers import AlbumGenreSerializer
 
 
 class AlbumSerializer(serializers.ModelSerializer):
-    artist = ArtistSerializer(read_only=True)
-    band = BandSerializer(read_only=True)
+    artist = author_serializers.ArtistSerializer(read_only=True)
+    band = author_serializers.BandSerializer(read_only=True)
     tracks = SimpleTrackSerializer(many=True, read_only=True)
-    genres = serializers.StringRelatedField(
-        many=True, read_only=True, source='album_genres')
+    genres = AlbumGenreSerializer(
+        source='album_genres', many=True, read_only=True)
 
     class Meta:
         model = Album
@@ -35,8 +36,8 @@ class AlbumSerializer(serializers.ModelSerializer):
 
 
 class SimpleAlbumSerializer(serializers.ModelSerializer):
-    artist = ArtistSerializer(read_only=True)
-    band = BandSerializer(read_only=True)
+    artist = author_serializers.SimpleArtistSerializer(read_only=True)
+    band = author_serializers.SimpleBandSerializer(read_only=True)
 
     class Meta:
         model = Album
