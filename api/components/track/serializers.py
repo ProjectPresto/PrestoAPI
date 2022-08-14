@@ -9,8 +9,6 @@ class FeaturedAuthorSerializer(serializers.ModelSerializer):
         lookup_field = 'slug'
         extra_kwargs = {
             'url': {'lookup_field': 'slug'},
-            'created_by': {'default': serializers.CurrentUserDefault()},
-            'updated_by': {'default': serializers.CurrentUserDefault()},
         }
 
     def create(self, validated_data):
@@ -45,11 +43,7 @@ class TrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Track
         fields = '__all__'
-        read_only_fields = [
-            'slug',
-            'created_at',
-            'updated_at',
-        ]
+        read_only_fields = ['slug']
 
     def create(self, validated_data):
         # Get user from jwt header

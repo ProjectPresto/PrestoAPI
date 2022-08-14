@@ -14,8 +14,7 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = '__all__'
-        read_only_fields = ['slug', 'created_at',
-                            'updated_at', 'created_by', 'updated_by']
+        read_only_fields = ['slug', 'created_by', 'updated_by']
         lookup_field = 'slug'
         extra_kwargs = {
             'url': {'lookup_field': 'slug'},

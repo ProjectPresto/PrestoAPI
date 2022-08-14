@@ -8,8 +8,6 @@ class ArtistSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = [
             'slug',
-            'created_at',
-            'updated_at',
             'created_by',
             'updated_by',
         ]
@@ -34,8 +32,6 @@ class BandSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = [
             'slug',
-            'created_at',
-            'updated_at',
             'created_by',
             'updated_by',
         ]

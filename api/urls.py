@@ -6,6 +6,7 @@ from .components.author import views as author_views
 from .components.track import views as track_views
 from .components.genre import views as genre_views
 from .components.review import views as review_views
+from .components.article import views as article_views
 
 router = routers.DefaultRouter()
 
@@ -28,6 +29,16 @@ router.register('album-genre', genre_views.AlbumGenreViewSet,
 
 # REVIEW
 router.register('review', review_views.ReviewViewSet, basename='review')
+
+# ARTICLE
+router.register('album-article', article_views.AlbumArticleViewSet,
+                basename='album-article')
+router.register('artist-article', article_views.ArtistArticleViewSet,
+                basename='artist-article')
+router.register('band-article', article_views.BandArticleViewSet,
+                basename='band-article')
+router.register('track-article', article_views.TrackArticleViewSet,
+                basename='track-article')
 
 urlpatterns = router.urls
 
