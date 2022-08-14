@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.template.defaultfilters import slugify
 
 from ..album.models import Album
 from ..author.models import Artist, Band
@@ -23,21 +22,6 @@ class Track(models.Model):
 
     def __str__(self) -> str:
         return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            # Generate a unique slug
-            count = 0
-            while True:
-                slug = slugify(self.title)
-                if count > 0:
-                    slug = f"{slug}-{count}"
-                if not Track.objects.filter(slug=slug).exists():
-                    self.slug = slug
-                    break
-                count += 1
-
-        return super().save(*args, **kwargs)
 
 
 class FeaturedAuthor(models.Model):

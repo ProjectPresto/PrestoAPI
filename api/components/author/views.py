@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
-from .models import Artist, Band
-from .serializers import ArtistSerializer, BandSerializer
+from .models import Artist, Band, BandMember
+from .serializers import ArtistSerializer, BandSerializer, BandMemberSerializer, CreateBandMemberSerializer
 from ...permissions import IsAuthSubmissionOrReadOnly
 
 
@@ -16,3 +16,14 @@ class BandViewSet(ModelViewSet):
     serializer_class = BandSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthSubmissionOrReadOnly]
+
+
+class BandMemberViewSet(ModelViewSet):
+    queryset = BandMember.objects.select_related(
+        'band', 'artist', 'created_by', 'updated_by').all()
+    permission_classes = [IsAuthSubmissionOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateBandMemberSerializer
+        return BandMemberSerializer

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.template.defaultfilters import slugify
 
 from .models import Genre, AlbumGenre
 # from ..album.serializers import SimpleAlbumSerializer
@@ -21,13 +22,24 @@ class GenreSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        # Get user from jwt header
+        # Generate a unique slug
+        if not self.slug:
+            count = 0
+            while True:
+                slug = slugify(self.name) if count == 0 else f"{slug}-{count}"
+                if not Genre.objects.filter(slug=slug).exists():
+                    self.slug = slug
+                    break
+                count += 1
+        return super().create(validated_data)
+
+    def save(self, **kwargs):
+        # Get user from JWT header
         user = self.context['request'].user
-        return Genre.objects.create(
-            created_by=user,
-            updated_by=user,
-            **validated_data
-        )
+        if self.instance is None:
+            return super().save(created_by=user, updated_by=user, **kwargs)
+        else:
+            return super().save(updated_by=user, **kwargs)
 
 
 class AlbumGenreSerializer(serializers.ModelSerializer):

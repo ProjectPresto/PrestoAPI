@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.template.defaultfilters import slugify
 from django_resized import ResizedImageField
 
 from ...helpers.RenameImageToSlug import RenameImageToSlug
@@ -8,6 +7,9 @@ from ..author.models import Artist, Band
 
 
 class Album(models.Model):
+    """
+    Modle for the album.
+    """
     RELEASE_TYPE_ALBUM_CHOICES = [
         ('LP', 'LP'),
         ('Single', 'Single'),
@@ -44,17 +46,3 @@ class Album(models.Model):
             return self.band.name + " - " + self.title
         else:
             return self.artist.name + " - " + self.title
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            # Generate a unique slug
-            count = 0
-            while True:
-                slug = slugify(self.title)
-                if count > 0:
-                    slug = f"{slug}-{count}"
-                if not Album.objects.filter(slug=slug).exists():
-                    self.slug = slug
-                    break
-                count += 1
-        return super().save(*args, **kwargs)

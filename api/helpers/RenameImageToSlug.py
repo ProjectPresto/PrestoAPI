@@ -12,7 +12,7 @@ class RenameImageToSlug(object):
 
     def __call__(self, instance, filename):
         ext = filename.split('.')[-1]
-        if instance.slug:
+        if hasattr(instance, 'slug'):
             filename = '{}.{}'.format(instance.slug, ext)
         else:
             filename = '{}.{}'.format(uuid4().hex, ext)

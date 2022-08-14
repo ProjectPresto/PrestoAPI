@@ -9,14 +9,13 @@ class AlbumArticleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['created_by', 'updated_by']
 
-    def create(self, validated_data):
-        # Get user from jwt header
+    def save(self, **kwargs):
+        # Get user from JWT header
         user = self.context['request'].user
-        return AlbumArticle.objects.create(
-            created_by=user,
-            updated_by=user,
-            **validated_data
-        )
+        if self.instance is None:
+            return super().save(created_by=user, updated_by=user, **kwargs)
+        else:
+            return super().save(updated_by=user, **kwargs)
 
 
 class ArtistArticleSerializer(serializers.ModelSerializer):
@@ -25,14 +24,13 @@ class ArtistArticleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['created_by', 'updated_by']
 
-    def create(self, validated_data):
-        # Get user from jwt header
+    def save(self, **kwargs):
+        # Get user from JWT header
         user = self.context['request'].user
-        return ArtistArticle.objects.create(
-            created_by=user,
-            updated_by=user,
-            **validated_data
-        )
+        if self.instance is None:
+            return super().save(created_by=user, updated_by=user, **kwargs)
+        else:
+            return super().save(updated_by=user, **kwargs)
 
 
 class BandArticleSerializer(serializers.ModelSerializer):
@@ -41,14 +39,13 @@ class BandArticleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['created_by', 'updated_by']
 
-    def create(self, validated_data):
-        # Get user from jwt header
+    def save(self, **kwargs):
+        # Get user from JWT header
         user = self.context['request'].user
-        return BandArticle.objects.create(
-            created_by=user,
-            updated_by=user,
-            **validated_data
-        )
+        if self.instance is None:
+            return super().save(created_by=user, updated_by=user, **kwargs)
+        else:
+            return super().save(updated_by=user, **kwargs)
 
 
 class TrackArticleSerializer(serializers.ModelSerializer):
@@ -57,11 +54,10 @@ class TrackArticleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['created_by', 'updated_by']
 
-    def create(self, validated_data):
-        # Get user from jwt header
+    def save(self, **kwargs):
+        # Get user from JWT header
         user = self.context['request'].user
-        return TrackArticle.objects.create(
-            created_by=user,
-            updated_by=user,
-            **validated_data
-        )
+        if self.instance is None:
+            return super().save(created_by=user, updated_by=user, **kwargs)
+        else:
+            return super().save(updated_by=user, **kwargs)

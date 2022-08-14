@@ -12,5 +12,14 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.username)
+            # Generate a unique slug
+            count = 0
+            while True:
+                slug = slugify(self.username)
+                if count > 0:
+                    slug = f"{slug}-{count}"
+                if not User.objects.filter(slug=slug).exists():
+                    self.slug = slug
+                    break
+                count += 1
         return super().save(*args, **kwargs)
