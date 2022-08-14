@@ -40,7 +40,10 @@ class Album(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="album_updated_user")
 
     def __str__(self) -> str:
-        return self.title
+        if self.band:
+            return self.band.name + " - " + self.title
+        else:
+            return self.artist.name + " - " + self.title
 
     def save(self, *args, **kwargs):
         if not self.slug:
