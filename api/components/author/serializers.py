@@ -10,13 +10,22 @@ class ArtistSerializer(serializers.ModelSerializer):
             'slug',
             'created_at',
             'updated_at',
+            'created_by',
+            'updated_by',
         ]
         lookup_field = 'slug'
         extra_kwargs = {
             'url': {'lookup_field': 'slug'},
-            'created_by': {'default': serializers.CurrentUserDefault()},
-            'updated_by': {'default': serializers.CurrentUserDefault()},
         }
+
+    def create(self, validated_data):
+        # Get user from jwt header
+        user = self.context['request'].user
+        return Artist.objects.create(
+            created_by=user,
+            updated_by=user,
+            **validated_data
+        )
 
 
 class BandSerializer(serializers.ModelSerializer):
@@ -27,10 +36,19 @@ class BandSerializer(serializers.ModelSerializer):
             'slug',
             'created_at',
             'updated_at',
+            'created_by',
+            'updated_by',
         ]
         lookup_field = 'slug'
         extra_kwargs = {
             'url': {'lookup_field': 'slug'},
-            'created_by': {'default': serializers.CurrentUserDefault()},
-            'updated_by': {'default': serializers.CurrentUserDefault()},
         }
+
+    def create(self, validated_data):
+        # Get user from jwt header
+        user = self.context['request'].user
+        return Band.objects.create(
+            created_by=user,
+            updated_by=user,
+            **validated_data
+        )

@@ -29,6 +29,29 @@ class SimpleAlbumSerializer(serializers.ModelSerializer):
         }
 
 
+class CreateAlbumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Album
+        fields = [
+            'title',
+            'release_date',
+            'release_type',
+            'art_cover',
+            'art_cover_url',
+            'artist',
+            'band',
+        ]
+
+    def create(self, validated_data):
+        # Get user from jwt header
+        user = self.context['request'].user
+        return Album.objects.create(
+            created_by=user,
+            updated_by=user,
+            **validated_data
+        )
+
+
 class AlbumSerializer(serializers.ModelSerializer):
     artist = ArtistSerializer(read_only=True)
     band = BandSerializer(read_only=True)
@@ -55,12 +78,3 @@ class AlbumSerializer(serializers.ModelSerializer):
             'updated_at',
             'updated_by',
         ]
-        read_only_fields = [
-            'slug',
-            'created_at',
-            'updated_at',
-        ]
-        extra_kwargs = {
-            'created_by': {'default': serializers.CurrentUserDefault()},
-            'updated_by': {'default': serializers.CurrentUserDefault()},
-        }

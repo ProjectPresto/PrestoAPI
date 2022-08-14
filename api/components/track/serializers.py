@@ -13,6 +13,15 @@ class FeaturedAuthorSerializer(serializers.ModelSerializer):
             'updated_by': {'default': serializers.CurrentUserDefault()},
         }
 
+    def create(self, validated_data):
+        # Get user from jwt header
+        user = self.context['request'].user
+        return models.FeaturedAuthor.objects.create(
+            created_by=user,
+            updated_by=user,
+            **validated_data
+        )
+
 
 class SimpleTrackSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,7 +50,12 @@ class TrackSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        extra_kwargs = {
-            'created_by': {'default': serializers.CurrentUserDefault()},
-            'updated_by': {'default': serializers.CurrentUserDefault()},
-        }
+
+    def create(self, validated_data):
+        # Get user from jwt header
+        user = self.context['request'].user
+        return models.Track.objects.create(
+            created_by=user,
+            updated_by=user,
+            **validated_data
+        )
