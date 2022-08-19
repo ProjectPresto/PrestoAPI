@@ -31,8 +31,6 @@ router.register(
 
 # GENRE
 router.register('genre', genre_views.GenreViewSet, basename='genre')
-router.register('album-genre', genre_views.AlbumGenreViewSet,
-                basename='album-genre')
 
 # REVIEW
 router.register('review', review_views.ReviewViewSet, basename='review')

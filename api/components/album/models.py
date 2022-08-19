@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from django_resized import ResizedImageField
 
+from api.components.genre.models import Genre
+
 from ...helpers.RenameImageToSlug import RenameImageToSlug
 from ..author.models import Artist, Band
 
@@ -33,6 +35,7 @@ class Album(models.Model):
     art_cover = ResizedImageField(
         size=[720, 720], upload_to=RenameImageToSlug("album/"), max_length=255, null=True)
     art_cover_url = models.URLField(max_length=2048, null=True)
+    genres = models.ManyToManyField(Genre, related_name='album_genres')
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(

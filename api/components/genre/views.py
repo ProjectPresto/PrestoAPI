@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from . import models
 from . import serializers
-from ...permissions import IsAuthOrReadOnly, IsAuthSubmissionOrReadOnly
+from ...permissions import IsAuthOrReadOnly
 
 
 class GenreViewSet(ModelViewSet):
@@ -10,10 +10,3 @@ class GenreViewSet(ModelViewSet):
     serializer_class = serializers.GenreSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthOrReadOnly]
-
-
-class AlbumGenreViewSet(ModelViewSet):
-    queryset = models.AlbumGenre.objects.select_related(
-        'album', 'genre', 'created_by', 'updated_by').all()
-    serializer_class = serializers.AlbumGenreSerializer
-    permission_classes = [IsAuthSubmissionOrReadOnly]

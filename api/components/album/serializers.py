@@ -1,18 +1,18 @@
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
 
+from api.components.genre.serializers import SimpleGenreSerializer
+
 from .models import Album
 from ..author import serializers as author_serializers
 from ..track.serializers import SimpleTrackSerializer
-from ..genre.serializers import AlbumGenreSerializer
 
 
 class AlbumSerializer(serializers.ModelSerializer):
     artist = author_serializers.ArtistSerializer(read_only=True)
     band = author_serializers.BandSerializer(read_only=True)
     tracks = SimpleTrackSerializer(many=True, read_only=True)
-    genres = AlbumGenreSerializer(
-        source='album_genres', many=True, read_only=True)
+    genres = SimpleGenreSerializer(many=True, read_only=True)
 
     class Meta:
         model = Album
@@ -38,6 +38,7 @@ class AlbumSerializer(serializers.ModelSerializer):
 class SimpleAlbumSerializer(serializers.ModelSerializer):
     artist = author_serializers.SimpleArtistSerializer(read_only=True)
     band = author_serializers.SimpleBandSerializer(read_only=True)
+    genres = SimpleGenreSerializer(many=True, read_only=True)
 
     class Meta:
         model = Album
@@ -51,6 +52,7 @@ class SimpleAlbumSerializer(serializers.ModelSerializer):
             'art_cover_url',
             'artist',
             'band',
+            'genres'
         ]
         lookup_field = 'slug'
         extra_kwargs = {
@@ -69,6 +71,7 @@ class CreateAlbumSerializer(serializers.ModelSerializer):
             'art_cover_url',
             'artist',
             'band',
+            'genres'
         ]
 
     def create(self, validated_data):

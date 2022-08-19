@@ -1,14 +1,13 @@
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
 
-from .models import Genre, AlbumGenre
-# from ..album.serializers import SimpleAlbumSerializer
+from .models import Genre
 
 
 class SimpleGenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ['name', 'slug']
+        fields = ['id', 'name', 'slug']
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -40,11 +39,3 @@ class GenreSerializer(serializers.ModelSerializer):
             return super().save(created_by=user, updated_by=user, **kwargs)
         else:
             return super().save(updated_by=user, **kwargs)
-
-
-class AlbumGenreSerializer(serializers.ModelSerializer):
-    genre = SimpleGenreSerializer()
-
-    class Meta:
-        model = AlbumGenre
-        fields = ['id', 'album', 'genre']
