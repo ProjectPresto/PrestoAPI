@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
 
+from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
+
 from .models import Genre
 
 
@@ -21,16 +23,12 @@ class GenreSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        # Generate a unique slug
-        if not self.slug:
-            count = 0
-            while True:
-                slug = slugify(self.name) if count == 0 else f"{slug}-{count}"
-                if not Genre.objects.filter(slug=slug).exists():
-                    self.slug = slug
-                    break
-                count += 1
+        validated_data = createUniqueSlug(Genre, validated_data)
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = updateUniqueSlug(Genre, validated_data)
+        return super().update(instance, validated_data)
 
     def save(self, **kwargs):
         # Get user from JWT header

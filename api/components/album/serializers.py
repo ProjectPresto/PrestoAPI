@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.template.defaultfilters import slugify
 
 from api.components.genre.serializers import SimpleGenreSerializer
+from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
 
 from .models import Album
 from ..author import serializers as author_serializers
@@ -75,16 +76,12 @@ class CreateAlbumSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        # Generate a unique slug
-        if not self.slug:
-            count = 0
-            while True:
-                slug = slugify(self.title) if count == 0 else f"{slug}-{count}"
-                if not Album.objects.filter(slug=slug).exists():
-                    self.slug = slug
-                    break
-                count += 1
+        validated_data = createUniqueSlug(Album, validated_data)
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = updateUniqueSlug(Album, validated_data)
+        return super().update(instance, validated_data)
 
     def save(self, **kwargs):
         # Only a band or an artist can be set as an album author
