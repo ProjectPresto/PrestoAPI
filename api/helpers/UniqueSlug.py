@@ -4,9 +4,9 @@ from django.template.defaultfilters import slugify
 def createUniqueSlug(model, validated_data):
     if 'slug' not in validated_data:
         i = 0
+        identifier = validated_data['name'] if 'name' in validated_data else validated_data['title']
         while True:
-            newSlug = slugify(
-                validated_data['name'] or validated_data['title']) if i == 0 else f"{(validated_data['name'] or validated_data['title'])}-{i}"
+            newSlug = slugify(identifier) if i == 0 else f"{identifier}-{i}"
             if not model.objects.filter(slug=newSlug).exists():
                 validated_data['slug'] = newSlug
                 break
@@ -17,9 +17,11 @@ def createUniqueSlug(model, validated_data):
 def updateUniqueSlug(model, validated_data):
     if 'slug' not in validated_data:
         i = 0
+        identifier = validated_data['name'] if 'name' in validated_data else validated_data['title']
+
         while True:
             newSlug = slugify(
-                validated_data['name'] or validated_data['title']) if i == 0 else f"{newSlug}-{i}"
+                identifier) if i == 0 else f"{slugify(identifier)}-{i}"
             if not model.objects.filter(slug=newSlug).exists():
                 validated_data['slug'] = newSlug
                 break
