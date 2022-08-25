@@ -15,6 +15,7 @@ django-resized = "*"
 pillow = "*"
 drf-nested-routers = "*"
 django-debug-toolbar = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 autopep8 = "*"
