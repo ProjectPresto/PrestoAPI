@@ -14,6 +14,6 @@ class AlbumViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return serializers.SimpleAlbumSerializer
-        elif self.action == "create":
+        elif self.action in ["create", "update"]:
             return serializers.CreateAlbumSerializer
         return serializers.AlbumSerializer

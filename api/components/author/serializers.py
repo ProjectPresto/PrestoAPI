@@ -1,15 +1,35 @@
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
-
 from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
 
 from .models import Artist, Band, BandMember
 
+from .helpers import getGenres
+
 
 class ArtistSerializer(serializers.ModelSerializer):
+    genres = serializers.SerializerMethodField()
+
+    def get_genres(self, obj):
+        return getGenres.get_genres(self, obj, 'artist')
+
     class Meta:
         model = Artist
-        fields = '__all__'
+        fields = [
+            'id',
+            'name',
+            'slug',
+            'full_name',
+            'birth_date',
+            'death_date',
+            'bg_image',
+            'bg_image_url',
+            'genres',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by'
+        ]
         read_only_fields = [
             'slug',
             'created_by',
@@ -51,9 +71,27 @@ class SimpleArtistSerializer(serializers.ModelSerializer):
 
 
 class BandSerializer(serializers.ModelSerializer):
+    genres = serializers.SerializerMethodField()
+
+    def get_genres(self, obj):
+        return getGenres.get_genres(self, obj, 'band')
+
     class Meta:
         model = Band
-        fields = '__all__'
+        fields = [
+            'id',
+            'name',
+            'slug',
+            'founding_year',
+            'breakup_year',
+            'bg_image',
+            'bg_image_url',
+            'genres',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by'
+        ]
         read_only_fields = [
             'slug',
             'created_by',
