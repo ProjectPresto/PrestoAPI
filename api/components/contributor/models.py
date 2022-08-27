@@ -9,11 +9,11 @@ class Contributor(models.Model):
     """ 
     Model for the contributor.
     Contributor is a user extended by the fields related to user profile.
-    Also serializer containes fields like count of contriubtions or ratings.
+    Also serializer containes fields like count of contributions or ratings.
     """
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contributor')
-    about_text = models.TextField()
+    about_text = models.TextField(null=True, blank=True)
     profile_picture = ResizedImageField(
         size=[500, 500], upload_to=RenameImageToSlug("profile_picture/"), max_length=255, null=True)
     profile_picture_url = models.URLField(max_length=2048, null=True)

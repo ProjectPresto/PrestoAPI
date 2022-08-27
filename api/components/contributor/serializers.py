@@ -4,6 +4,15 @@ from .models import Contributor
 
 
 class ContributorSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+
+    def get_username(self, obj):
+        return obj.user.username
+
+    def get_email(self, obj):
+        return obj.user.email
+
     class Meta:
         model = Contributor
         fields = '__all__'
