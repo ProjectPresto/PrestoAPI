@@ -158,6 +158,9 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+
+    # Pagination
+    'DEFAULT_PAGINATION_CLASS': 'core.customPagination.Pagination',
 }
 
 # Djoser and JWT settings
