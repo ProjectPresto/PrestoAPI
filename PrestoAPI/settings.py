@@ -161,6 +161,7 @@ REST_FRAMEWORK = {
 
     # Pagination
     'DEFAULT_PAGINATION_CLASS': 'core.customPagination.Pagination',
+    'PAGE_SIZE': 2,
 }
 
 # Djoser and JWT settings
