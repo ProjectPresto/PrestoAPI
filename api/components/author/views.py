@@ -2,6 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Artist, Band, BandMember
 from .serializers import ArtistSerializer, BandSerializer, BandMemberSerializer, CreateBandMemberSerializer
 from ...permissions import IsAuthSubmissionOrReadOnly
+from rest_framework.filters import OrderingFilter
 
 
 class ArtistViewSet(ModelViewSet):
@@ -9,6 +10,8 @@ class ArtistViewSet(ModelViewSet):
     serializer_class = ArtistSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthSubmissionOrReadOnly]
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['name', 'birth_date']
 
 
 class BandViewSet(ModelViewSet):
@@ -16,6 +19,8 @@ class BandViewSet(ModelViewSet):
     serializer_class = BandSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthSubmissionOrReadOnly]
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['name', 'founding_year']
 
 
 class BandMemberViewSet(ModelViewSet):
