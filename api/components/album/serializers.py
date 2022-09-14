@@ -1,7 +1,12 @@
+import datetime
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
+from django.db.models.fields import DurationField
+from django.db.models import Sum, ExpressionWrapper
+from django.db.models.expressions import F
 
 from api.components.genre.serializers import SimpleGenreSerializer
+from api.components.track.models import Track
 from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
 
 from .models import Album
@@ -14,6 +19,14 @@ class AlbumSerializer(serializers.ModelSerializer):
     band = author_serializers.BandSerializer(read_only=True)
     tracks = SimpleTrackSerializer(many=True, read_only=True)
     genres = SimpleGenreSerializer(many=True, read_only=True)
+    full_duration = serializers.SerializerMethodField()
+
+    def get_full_duration(self, obj):
+        tracks_dur = Track.objects.filter(
+            album_id=obj.id).all().aggregate(res=Sum('duration'))['res']
+        if tracks_dur is not None:
+            return str(tracks_dur)
+        return tracks_dur
 
     class Meta:
         model = Album
@@ -27,6 +40,7 @@ class AlbumSerializer(serializers.ModelSerializer):
             'art_cover_url',
             'artist',
             'band',
+            'full_duration',
             'tracks',
             'genres',
             'created_at',

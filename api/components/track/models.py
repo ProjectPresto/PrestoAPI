@@ -10,7 +10,8 @@ class Track(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     album = models.ForeignKey(
         Album, on_delete=models.CASCADE, null=False, related_name="tracks")
-    position = models.PositiveIntegerField(null=True)
+    position = models.PositiveIntegerField()
+    disc = models.PositiveIntegerField(null=True)
     duration = models.DurationField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

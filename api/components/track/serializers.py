@@ -1,15 +1,39 @@
 from rest_framework import serializers
-from django.template.defaultfilters import slugify
-
+from .models import FeaturedAuthor, Track
+from api.components.author.serializers import SimpleArtistSerializer, SimpleBandSerializer
 from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
 
-from .models import FeaturedAuthor, Track
+
+class SimpleFeaturedAuthorSerializer(serializers.ModelSerializer):
+    artist = SimpleArtistSerializer(read_only=True)
+    band = SimpleBandSerializer(read_only=True)
+
+    class Meta:
+        model = FeaturedAuthor
+        fields = [
+            'id',
+            'track',
+            'artist',
+            'band'
+        ]
 
 
 class FeaturedAuthorSerializer(serializers.ModelSerializer):
+    artist = SimpleArtistSerializer()
+    band = SimpleBandSerializer()
+
     class Meta:
         model = FeaturedAuthor
-        fields = '__all__'
+        fields = [
+            'id',
+            'track',
+            'artist',
+            'band',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by'
+        ]
         read_only_fields = ['created_by', 'updated_by']
         lookup_field = 'slug'
         extra_kwargs = {
@@ -26,6 +50,9 @@ class FeaturedAuthorSerializer(serializers.ModelSerializer):
 
 
 class SimpleTrackSerializer(serializers.ModelSerializer):
+    featured_authors = SimpleFeaturedAuthorSerializer(
+        many=True, read_only=True)
+
     class Meta:
         model = Track
         fields = [
@@ -33,7 +60,9 @@ class SimpleTrackSerializer(serializers.ModelSerializer):
             'title',
             'slug',
             'position',
+            'disc',
             'duration',
+            'featured_authors'
         ]
 
 
@@ -42,7 +71,20 @@ class TrackSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Track
-        fields = '__all__'
+        fields = [
+            'id',
+            'title',
+            'slug',
+            'position',
+            'disc',
+            'duration',
+            'featured_authors',
+            'album',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by'
+        ]
         read_only_fields = ['slug', 'created_by', 'updated_by']
 
     def create(self, validated_data):
