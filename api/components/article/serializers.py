@@ -8,6 +8,10 @@ class AlbumArticleSerializer(serializers.ModelSerializer):
         model = AlbumArticle
         fields = '__all__'
         read_only_fields = ['created_by', 'updated_by']
+        lookup_field = 'album__slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'album__slug'},
+        }
 
     def save(self, **kwargs):
         # Get user from JWT header
@@ -23,6 +27,10 @@ class ArtistArticleSerializer(serializers.ModelSerializer):
         model = ArtistArticle
         fields = '__all__'
         read_only_fields = ['created_by', 'updated_by']
+        lookup_field = 'artist__slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'artist__slug'},
+        }
 
     def save(self, **kwargs):
         # Get user from JWT header
@@ -38,6 +46,10 @@ class BandArticleSerializer(serializers.ModelSerializer):
         model = BandArticle
         fields = '__all__'
         read_only_fields = ['created_by', 'updated_by']
+        lookup_field = 'band__slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'band__slug'},
+        }
 
     def save(self, **kwargs):
         # Get user from JWT header
@@ -53,6 +65,10 @@ class TrackArticleSerializer(serializers.ModelSerializer):
         model = TrackArticle
         fields = '__all__'
         read_only_fields = ['created_by', 'updated_by']
+        lookup_field = 'track__slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'track__slug'},
+        }
 
     def save(self, **kwargs):
         # Get user from JWT header
