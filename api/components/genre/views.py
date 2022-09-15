@@ -2,6 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from . import models
 from . import serializers
 from ...permissions import IsAuthOrReadOnly
+from rest_framework.filters import SearchFilter
 
 
 class GenreViewSet(ModelViewSet):
@@ -10,3 +11,6 @@ class GenreViewSet(ModelViewSet):
     serializer_class = serializers.GenreSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthOrReadOnly]
+
+    filter_backends = [SearchFilter]
+    search_fields = ['name']
