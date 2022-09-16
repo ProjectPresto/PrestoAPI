@@ -2,8 +2,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
-from api.components.album.filters import AlbumFilterSet
-
 from ...permissions import IsAuthSubmissionOrReadOnly
 from . import models
 from . import serializers

@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.template.defaultfilters import slugify
 from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
 
 from .models import Artist, Band, BandMember
