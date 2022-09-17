@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
+from api.components.album.models import Album
+from api.components.author.models import Artist, Band
 
 from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
 
@@ -13,6 +15,19 @@ class SimpleGenreSerializer(serializers.ModelSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
+    album_count = serializers.SerializerMethodField()
+    artist_count = serializers.SerializerMethodField()
+    band_count = serializers.SerializerMethodField()
+
+    def get_album_count(self, obj):
+        return Album.objects.filter(genres__id=obj.id).distinct('pk').count()
+
+    def get_artist_count(self, obj):
+        return Artist.objects.filter(album__genres__id=obj.id).distinct('pk').count()
+
+    def get_band_count(self, obj):
+        return Band.objects.filter(album__genres__id=obj.id).distinct('pk').count()
+
     class Meta:
         model = Genre
         fields = '__all__'

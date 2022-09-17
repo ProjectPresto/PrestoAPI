@@ -18,9 +18,11 @@ class AlbumViewSet(ModelViewSet):
 
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     filterset_fields = {
+        'artist': ['exact'],
+        'band': ['exact'],
         'release_type': ['exact'],
         'genres': ['exact'],
-        'release_date': ['gte', 'lte']
+        'release_date': ['gte', 'lte'],
     }
     ordering_fields = ['title', 'release_date']
     search_fields = ['title']
