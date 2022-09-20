@@ -32,10 +32,6 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
         fields = '__all__'
         read_only_fields = ['slug', 'created_by', 'updated_by']
-        lookup_field = 'slug'
-        extra_kwargs = {
-            'url': {'lookup_field': 'slug'},
-        }
 
     def create(self, validated_data):
         validated_data = createUniqueSlug(Genre, validated_data)
