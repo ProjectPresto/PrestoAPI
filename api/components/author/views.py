@@ -16,6 +16,7 @@ class ArtistViewSet(ModelViewSet):
     filterset_fields = {
         'birth_date': ['day__exact', 'month__exact'],
         'death_date': ['day__exact', 'month__exact'],
+        'album__genres': ['exact'],
     }
     ordering_fields = ['name', 'birth_date']
     search_fields = ['name', 'album__title']
@@ -26,7 +27,10 @@ class BandViewSet(ModelViewSet):
     serializer_class = BandSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthSubmissionOrReadOnly]
-    filter_backends = [OrderingFilter, SearchFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_fields = {
+        'album__genres': ['exact'],
+    }
     ordering_fields = ['name', 'founding_year']
     search_fields = ['name', 'album__title']
 
