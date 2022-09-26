@@ -15,5 +15,6 @@ class GenreViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = {
         'id': ['in'],
+        'name': ['icontains'],
     }
     search_fields = ['name']
