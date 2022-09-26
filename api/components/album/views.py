@@ -22,7 +22,7 @@ class AlbumViewSet(ModelViewSet):
         'band': ['exact'],
         'release_type': ['exact'],
         'genres': ['exact'],
-        'release_date': ['gte', 'lte'],
+        'release_date': ['gte', 'lte', 'day__exact', 'month__exact'],
     }
     ordering_fields = ['title', 'release_date']
     search_fields = ['title']

@@ -1,8 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import OrderingFilter, SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .models import Artist, Band, BandMember
 from .serializers import ArtistSerializer, BandSerializer, BandMemberSerializer, CreateBandMemberSerializer
 from ...permissions import IsAuthSubmissionOrReadOnly
-from rest_framework.filters import OrderingFilter, SearchFilter
 
 
 class ArtistViewSet(ModelViewSet):
@@ -10,7 +12,11 @@ class ArtistViewSet(ModelViewSet):
     serializer_class = ArtistSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthSubmissionOrReadOnly]
-    filter_backends = [OrderingFilter, SearchFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_fields = {
+        'birth_date': ['day__exact', 'month__exact'],
+        'death_date': ['day__exact', 'month__exact'],
+    }
     ordering_fields = ['name', 'birth_date']
     search_fields = ['name', 'album__title']
 
