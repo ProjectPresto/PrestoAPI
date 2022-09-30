@@ -92,7 +92,7 @@ class TrackSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Track, validated_data)
+        validated_data = updateUniqueSlug(Track, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):

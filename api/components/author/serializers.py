@@ -44,7 +44,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Artist, validated_data)
+        validated_data = updateUniqueSlug(Artist, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):
@@ -106,7 +106,7 @@ class BandSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Band, validated_data)
+        validated_data = updateUniqueSlug(Band, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):

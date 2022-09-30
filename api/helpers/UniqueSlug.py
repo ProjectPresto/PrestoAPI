@@ -14,14 +14,19 @@ def createUniqueSlug(model, validated_data):
     return validated_data
 
 
-def updateUniqueSlug(model, validated_data):
-    if 'slug' not in validated_data:
-        i = 0
+def updateUniqueSlug(model, instance, validated_data):
+    if 'slug' not in validated_data and ('name' in validated_data or 'title' in validated_data):
         identifier = validated_data['name'] if 'name' in validated_data else validated_data['title']
+        old_identifier = instance.name if hasattr(instance, 'name') else instance.title
 
+        print(identifier, old_identifier)
+
+        if identifier == old_identifier:
+            return validated_data
+
+        i = 0
         while True:
-            newSlug = slugify(
-                identifier) if i == 0 else f"{slugify(identifier)}-{i}"
+            newSlug = slugify(identifier) if i == 0 else f"{slugify(identifier)}-{i}"
             if not model.objects.filter(slug=newSlug).exists():
                 validated_data['slug'] = newSlug
                 break

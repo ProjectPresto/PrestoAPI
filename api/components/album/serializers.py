@@ -1,4 +1,7 @@
 import datetime
+import logging
+import sys
+
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
 from django.db.models.fields import DurationField
@@ -98,10 +101,17 @@ class CreateAlbumSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Album, validated_data)
+        validated_data = updateUniqueSlug(Album, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):
+        # Populate empty band and artist
+        if 'band' not in self.validated_data:
+            self.validated_data['band'] = self.instance.band
+
+        if 'artist' not in self.validated_data:
+            self.validated_data['artist'] = self.instance.artist
+
         # Only a band or an artist can be set as an album author
         if self.validated_data['band'] and self.validated_data['artist']:
             raise serializers.ValidationError(

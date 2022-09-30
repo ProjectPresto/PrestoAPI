@@ -38,7 +38,7 @@ class GenreSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Genre, validated_data)
+        validated_data = updateUniqueSlug(Genre, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):
