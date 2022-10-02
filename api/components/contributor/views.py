@@ -10,4 +10,7 @@ class ContributorViewSet(ModelViewSet):
         'user').all()
     serializer_class = serializers.ContributorSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["user"]
+    filterset_fields = {
+        'user': ['exact'],
+        'user__username': ['icontains'],
+    }
