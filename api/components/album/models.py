@@ -35,7 +35,7 @@ class Album(models.Model):
     art_cover = ResizedImageField(
         size=[720, 720], upload_to=RenameImageToSlug("album/"), max_length=255, null=True)
     art_cover_url = models.URLField(max_length=2048, null=True)
-    genres = models.ManyToManyField(Genre, related_name='album_genres', null=True, blank=True)
+    genres = models.ManyToManyField(Genre, related_name='album_genres', blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
