@@ -40,7 +40,6 @@ class AlbumSerializer(serializers.ModelSerializer):
             'title',
             'slug',
             'release_date',
-
             'release_type',
             'art_cover',
             'art_cover_url',
