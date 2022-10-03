@@ -39,7 +39,7 @@ class ContributorSerializer(serializers.ModelSerializer):
             created_by=obj.user).values('name', 'slug', 'created_at')
 
         createdBandMembers = BandMember.objects.filter(
-            created_by=obj.user).values('artist', 'name', 'band', 'created_at')
+            created_by=obj.user).values('artist__name', 'artist__slug', 'name', 'band__name', 'band__slug', 'created_at')
 
         for album in createdAlbums:
             album['type'] = 'Album'
