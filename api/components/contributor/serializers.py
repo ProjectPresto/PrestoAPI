@@ -1,6 +1,6 @@
 import operator
+from django.db.models import Count
 from rest_framework import serializers
-from rest_framework.settings import api_settings
 
 from api.components.album.models import Album
 from api.components.author.models import Artist, Band, BandMember
@@ -24,22 +24,29 @@ class ContributorSerializer(serializers.ModelSerializer):
 
     def get_contributions(self, obj):
         createdAlbums = Album.objects.filter(
-            created_by=obj.user).values('title', 'slug', 'artist__name', 'artist__slug', 'band__name', 'band__slug', 'created_at')
+            created_by=obj.user).values('id', 'title', 'slug', 'release_type', 'artist__name', 'artist__slug', 'band__name', 'band__slug', 'created_at')
 
         createdTracks = Track.objects.filter(
-            created_by=obj.user).values('title', 'slug', 'album__title', 'album__slug', 'created_at')
+            created_by=obj.user).values('created_at', 'album__title', 'album__slug').annotate(tracks_count=Count('id'))
+
+        # Needed because tracks are grouped in serializer
+        createdTracksCount = Track.objects.filter(created_by=obj.user).count()
 
         createdArtists = Artist.objects.filter(
-            created_by=obj.user).values('name', 'slug', 'created_at')
+            created_by=obj.user).values('id', 'name', 'slug', 'created_at')
 
         createdBands = Band.objects.filter(
-            created_by=obj.user).values('name', 'slug', 'created_at')
+            created_by=obj.user).values('id', 'name', 'slug', 'created_at')
 
-        createdGenres = Genre.objects.filter(
-            created_by=obj.user).values('name', 'slug', 'created_at')
+        createdGenres = Genre.objects\
+            .filter(created_by=obj.user).filter(album_genres__isnull=False)\
+            .values('created_at', 'album_genres__title', 'album_genres__slug').annotate(genres_count=Count('id'))
+
+        createdGenresCount = Genre.objects.filter(
+            created_by=obj.user).filter(album_genres__isnull=False).count()
 
         createdBandMembers = BandMember.objects.filter(
-            created_by=obj.user).values('artist__name', 'artist__slug', 'name', 'band__name', 'band__slug', 'created_at')
+            created_by=obj.user).values('id', 'artist__name', 'artist__slug', 'name', 'band__name', 'band__slug', 'created_at')
 
         for album in createdAlbums:
             album['type'] = 'Album'
@@ -64,14 +71,27 @@ class ContributorSerializer(serializers.ModelSerializer):
 
         data.sort(key=operator.itemgetter('created_at'), reverse=True)
 
+        total = createdAlbums.count() + createdTracksCount + createdArtists.count() + \
+            createdBands.count() + createdGenres.count() + createdBandMembers.count()
+
+        # Points value:
+        # Articles: 5 points
+        # Albums, Bands, Artists: 3 points
+        # Tracks, Genres, Band members, Edits: 1 point
+        points = (createdAlbums.count() * 3) + createdTracksCount + (createdArtists.count() * 3) + \
+            (createdBands.count() * 3) + createdGenresCount + \
+            createdBandMembers.count()
+
         return {
             'counts': {
                 'createdAlbums': createdAlbums.count(),
-                'createdTracks': createdTracks.count(),
+                'createdTracks': createdTracksCount,
                 'createdArtists': createdArtists.count(),
                 'createdBands': createdBands.count(),
-                'createdGenres': createdGenres.count(),
-                'createdBandMembers': createdBandMembers.count()
+                'createdGenres': createdGenresCount,
+                'createdBandMembers': createdBandMembers.count(),
+                'total': total,
+                'points': points
             },
             'data': data
         }
@@ -88,6 +108,10 @@ class ContributorSerializer(serializers.ModelSerializer):
             'user',
             'contributions'
         ]
+        lookup_field = 'user'
+        extra_kwargs = {
+            'url': {'lookup_field': 'user'},
+        }
 
 
 class SimpleContributorSerializer(serializers.ModelSerializer):

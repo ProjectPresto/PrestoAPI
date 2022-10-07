@@ -8,6 +8,7 @@ from . import serializers
 class ContributorViewSet(ModelViewSet):
     queryset = models.Contributor.objects.select_related(
         'user').all()
+    lookup_field = 'user'
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
         'user': ['exact'],
