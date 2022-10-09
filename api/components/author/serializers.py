@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from api.components.article.serializers import ArtistArticleSerializer, BandArticleSerializer
 from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
 
 from .models import Artist, Band, BandMember
@@ -8,6 +9,7 @@ from .helpers import getGenres
 
 class ArtistSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
+    article = ArtistArticleSerializer(source="artistarticle", read_only=True)
 
     def get_genres(self, obj):
         return getGenres.get_genres(self, obj, 'artist')
@@ -24,6 +26,7 @@ class ArtistSerializer(serializers.ModelSerializer):
             'bg_image',
             'bg_image_url',
             'genres',
+            'article',
             'created_at',
             'updated_at',
             'created_by',
@@ -71,6 +74,7 @@ class SimpleArtistSerializer(serializers.ModelSerializer):
 
 class BandSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
+    article = BandArticleSerializer(source="bandarticle", read_only=True)
 
     def get_genres(self, obj):
         return getGenres.get_genres(self, obj, 'band')
@@ -86,6 +90,7 @@ class BandSerializer(serializers.ModelSerializer):
             'bg_image',
             'bg_image_url',
             'genres',
+            'article',
             'created_at',
             'updated_at',
             'created_by',
