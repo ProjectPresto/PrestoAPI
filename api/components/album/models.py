@@ -10,7 +10,7 @@ from ..author.models import Artist, Band
 
 class Album(models.Model):
     """
-    Modle for the album.
+    Model for the album.
     """
     RELEASE_TYPE_ALBUM_CHOICES = [
         ('LP', 'LP'),

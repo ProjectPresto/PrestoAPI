@@ -3,13 +3,12 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Artist, Band, BandMember
-from .serializers import ArtistSerializer, BandSerializer, BandMemberSerializer, CreateBandMemberSerializer
+from . import serializers
 from ...permissions import IsAuthSubmissionOrReadOnly
 
 
 class ArtistViewSet(ModelViewSet):
     queryset = Artist.objects.select_related('created_by', 'updated_by').all()
-    serializer_class = ArtistSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthSubmissionOrReadOnly]
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -21,10 +20,14 @@ class ArtistViewSet(ModelViewSet):
     ordering_fields = ['name', 'birth_date']
     search_fields = ['name', 'album__title']
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.SimpleArtistSerializer
+        return serializers.ArtistSerializer
+
 
 class BandViewSet(ModelViewSet):
     queryset = Band.objects.select_related('created_by', 'updated_by').all()
-    serializer_class = BandSerializer
     lookup_field = 'slug'
     permission_classes = [IsAuthSubmissionOrReadOnly]
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -34,6 +37,11 @@ class BandViewSet(ModelViewSet):
     ordering_fields = ['name', 'founding_year']
     search_fields = ['name', 'album__title']
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.SimpleBandSerializer
+        return serializers.BandSerializer
+
 
 class BandMemberViewSet(ModelViewSet):
     queryset = BandMember.objects.select_related(
@@ -42,5 +50,5 @@ class BandMemberViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return CreateBandMemberSerializer
-        return BandMemberSerializer
+            return serializers.CreateBandMemberSerializer
+        return serializers.BandMemberSerializer

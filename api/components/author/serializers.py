@@ -1,15 +1,44 @@
+import itertools
+
+from django.contrib.postgres.aggregates import ArrayAgg
 from rest_framework import serializers
+
+from api.components.album.models import Album
 from api.components.article.serializers import ArtistArticleSerializer, BandArticleSerializer
 from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
 
 from .models import Artist, Band, BandMember
 
 from .helpers import getGenres
+from ..genre.serializers import SimpleGenreSerializer
+
+
+class AlbumInAuthorSerializer(serializers.ModelSerializer):
+    genres = SimpleGenreSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Album
+        fields = [
+            'id',
+            'title',
+            'slug',
+            'release_date',
+            'release_type',
+            'art_cover',
+            'art_cover_url',
+            'genres'
+        ]
 
 
 class ArtistSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
+    albums = serializers.SerializerMethodField()
     article = ArtistArticleSerializer(source="artistarticle", read_only=True)
+
+    def get_albums(self, obj):
+        request = self.context.get('request')
+        albums = obj.album_set.order_by('-release_date').all()
+        return AlbumInAuthorSerializer(albums, many=True, read_only=True, context={'request': request}).data
 
     def get_genres(self, obj):
         return getGenres.get_genres(self, obj, 'artist')
@@ -26,6 +55,7 @@ class ArtistSerializer(serializers.ModelSerializer):
             'bg_image',
             'bg_image_url',
             'genres',
+            'albums',
             'article',
             'created_at',
             'updated_at',
@@ -61,6 +91,11 @@ class ArtistSerializer(serializers.ModelSerializer):
 
 
 class SimpleArtistSerializer(serializers.ModelSerializer):
+    genres = serializers.SerializerMethodField()
+
+    def get_genres(self, obj):
+        return getGenres.get_genres(self, obj, 'artist')
+
     class Meta:
         model = Artist
         fields = [
@@ -69,15 +104,22 @@ class SimpleArtistSerializer(serializers.ModelSerializer):
             'slug',
             'bg_image',
             'bg_image_url',
+            'genres',
         ]
 
 
 class BandSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
+    albums = serializers.SerializerMethodField()
     article = BandArticleSerializer(source="bandarticle", read_only=True)
 
     def get_genres(self, obj):
         return getGenres.get_genres(self, obj, 'band')
+
+    def get_albums(self, obj):
+        request = self.context.get('request')
+        albums = obj.album_set.order_by('-release_date').all()
+        return AlbumInAuthorSerializer(albums, many=True, read_only=True, context={'request': request}).data
 
     class Meta:
         model = Band
@@ -90,6 +132,7 @@ class BandSerializer(serializers.ModelSerializer):
             'bg_image',
             'bg_image_url',
             'genres',
+            'albums',
             'article',
             'created_at',
             'updated_at',
@@ -124,6 +167,11 @@ class BandSerializer(serializers.ModelSerializer):
 
 
 class SimpleBandSerializer(serializers.ModelSerializer):
+    genres = serializers.SerializerMethodField()
+
+    def get_genres(self, obj):
+        return getGenres.get_genres(self, obj, 'band')
+
     class Meta:
         model = Band
         fields = [
@@ -132,6 +180,7 @@ class SimpleBandSerializer(serializers.ModelSerializer):
             'slug',
             'bg_image',
             'bg_image_url',
+            'genres',
         ]
 
 
