@@ -1,6 +1,3 @@
-import itertools
-
-from django.contrib.postgres.aggregates import ArrayAgg
 from rest_framework import serializers
 
 from api.components.album.models import Album
@@ -108,13 +105,38 @@ class SimpleArtistSerializer(serializers.ModelSerializer):
         ]
 
 
+class BandMemberSerializer(serializers.ModelSerializer):
+    artist = SimpleArtistSerializer()
+
+    class Meta:
+        model = BandMember
+        fields = [
+            'id',
+            'artist',
+            'name',
+            'roles',
+            'join_year',
+            'quit_year',
+            'created_by',
+            'updated_by',
+            'created_at',
+            'updated_at',
+        ]
+
+
 class BandSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
     albums = serializers.SerializerMethodField()
+    band_members = serializers.SerializerMethodField()
     article = BandArticleSerializer(source="bandarticle", read_only=True)
 
     def get_genres(self, obj):
         return getGenres.get_genres(self, obj, 'band')
+
+    def get_band_members(self, obj):
+        request = self.context.get('request')
+        band_members = obj.bandmember_set.order_by('join_year').all()
+        return BandMemberSerializer(band_members, many=True, read_only=True, context={'request': request}).data
 
     def get_albums(self, obj):
         request = self.context.get('request')
@@ -133,6 +155,7 @@ class BandSerializer(serializers.ModelSerializer):
             'bg_image_url',
             'genres',
             'albums',
+            'band_members',
             'article',
             'created_at',
             'updated_at',
@@ -181,27 +204,6 @@ class SimpleBandSerializer(serializers.ModelSerializer):
             'bg_image',
             'bg_image_url',
             'genres',
-        ]
-
-
-class BandMemberSerializer(serializers.ModelSerializer):
-    band = BandSerializer()
-    artist = ArtistSerializer()
-
-    class Meta:
-        model = BandMember
-        fields = [
-            'id',
-            'band',
-            'artist',
-            'name',
-            'roles',
-            'join_year',
-            'quit_year',
-            'created_by',
-            'updated_by',
-            'created_at',
-            'updated_at',
         ]
 
 
