@@ -27,66 +27,6 @@ class AlbumInAuthorSerializer(serializers.ModelSerializer):
         ]
 
 
-class ArtistSerializer(serializers.ModelSerializer):
-    genres = serializers.SerializerMethodField()
-    albums = serializers.SerializerMethodField()
-    article = ArtistArticleSerializer(source="artistarticle", read_only=True)
-
-    def get_albums(self, obj):
-        request = self.context.get('request')
-        albums = obj.album_set.order_by('-release_date').all()
-        return AlbumInAuthorSerializer(albums, many=True, read_only=True, context={'request': request}).data
-
-    def get_genres(self, obj):
-        return getGenres.get_genres(self, obj, 'artist')
-
-    class Meta:
-        model = Artist
-        fields = [
-            'id',
-            'name',
-            'slug',
-            'full_name',
-            'birth_date',
-            'death_date',
-            'bg_image',
-            'bg_image_url',
-            'genres',
-            'albums',
-            'article',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by'
-        ]
-        read_only_fields = [
-            'slug',
-            'created_by',
-            'updated_by',
-        ]
-        lookup_field = 'slug'
-        extra_kwargs = {
-            'url': {'lookup_field': 'slug'},
-        }
-
-    def create(self, validated_data):
-        validated_data = createUniqueSlug(Artist, validated_data)
-        return super().create(validated_data)
-
-    def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Artist, instance, validated_data)
-        return super().update(instance, validated_data)
-
-    def save(self, **kwargs):
-        # Get user from JWT header
-        user = self.context['request'].user
-
-        if self.instance is None:
-            return super().save(created_by=user, updated_by=user, **kwargs)
-        else:
-            return super().save(updated_by=user, **kwargs)
-
-
 class SimpleArtistSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
 
@@ -229,6 +169,88 @@ class CreateBandMemberSerializer(serializers.ModelSerializer):
 
         # Get user from JWT header
         user = self.context['request'].user
+        if self.instance is None:
+            return super().save(created_by=user, updated_by=user, **kwargs)
+        else:
+            return super().save(updated_by=user, **kwargs)
+
+
+class ArtistMembershipSerializer(serializers.ModelSerializer):
+    band = SimpleBandSerializer()
+
+    class Meta:
+        model = BandMember
+        fields = [
+            'id',
+            'band',
+            'join_year',
+            'quit_year',
+            'roles'
+        ]
+
+
+class ArtistSerializer(serializers.ModelSerializer):
+    genres = serializers.SerializerMethodField()
+    albums = serializers.SerializerMethodField()
+    band_memberships = serializers.SerializerMethodField()
+    article = ArtistArticleSerializer(source="artistarticle", read_only=True)
+
+    def get_albums(self, obj):
+        request = self.context.get('request')
+        albums = obj.album_set.order_by('-release_date').all()
+        return AlbumInAuthorSerializer(albums, many=True, read_only=True, context={'request': request}).data
+
+    def get_genres(self, obj):
+        return getGenres.get_genres(self, obj, 'artist')
+
+    def get_band_memberships(self, obj):
+        request = self.context.get('request')
+        band_memberships = obj.bandmember_set.order_by('-join_year').all()
+        return ArtistMembershipSerializer(band_memberships, many=True, read_only=True,
+                                          context={'request': request}).data
+
+    class Meta:
+        model = Artist
+        fields = [
+            'id',
+            'name',
+            'slug',
+            'full_name',
+            'birth_date',
+            'death_date',
+            'bg_image',
+            'bg_image_url',
+            'genres',
+            'albums',
+            'article',
+            'band_memberships',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by'
+        ]
+        read_only_fields = [
+            'slug',
+            'created_by',
+            'updated_by',
+        ]
+        lookup_field = 'slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'},
+        }
+
+    def create(self, validated_data):
+        validated_data = createUniqueSlug(Artist, validated_data)
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = updateUniqueSlug(Artist, instance, validated_data)
+        return super().update(instance, validated_data)
+
+    def save(self, **kwargs):
+        # Get user from JWT header
+        user = self.context['request'].user
+
         if self.instance is None:
             return super().save(created_by=user, updated_by=user, **kwargs)
         else:
