@@ -97,19 +97,21 @@ class CreateAlbumSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = createUniqueSlug(Album, validated_data)
+
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
         validated_data = updateUniqueSlug(Album, instance, validated_data)
+
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):
         # Populate empty band and artist
         if 'band' not in self.validated_data:
-            self.validated_data['band'] = self.instance.band
+            self.validated_data['band'] = None if self.instance is None else self.instance.band
 
         if 'artist' not in self.validated_data:
-            self.validated_data['artist'] = self.instance.artist
+            self.validated_data['artist'] = None if self.instance is None else self.instance.artist
 
         # Only a band or an artist can be set as an album author
         if self.validated_data['band'] and self.validated_data['artist']:

@@ -18,7 +18,7 @@ class ArtistViewSet(ModelViewSet):
         'album__genres': ['exact'],
     }
     ordering_fields = ['name', 'birth_date']
-    search_fields = ['name', 'album__title']
+    search_fields = ['name', 'slug', 'album__title']
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -35,7 +35,7 @@ class BandViewSet(ModelViewSet):
         'album__genres': ['exact'],
     }
     ordering_fields = ['name', 'founding_year']
-    search_fields = ['name', 'album__title']
+    search_fields = ['name', 'slug', 'album__title']
 
     def get_serializer_class(self):
         if self.action == 'list':
