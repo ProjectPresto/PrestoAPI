@@ -41,6 +41,8 @@ class SimpleArtistSerializer(serializers.ModelSerializer):
             'slug',
             'bg_image',
             'bg_image_url',
+            'birth_date',
+            'death_date',
             'genres',
         ]
 
