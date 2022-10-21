@@ -19,8 +19,8 @@ from ..track.serializers import SimpleTrackSerializer
 
 
 class AlbumSerializer(serializers.ModelSerializer):
-    artist = author_serializers.ArtistSerializer(read_only=True)
-    band = author_serializers.BandSerializer(read_only=True)
+    artist = author_serializers.SimpleArtistSerializer(read_only=True)
+    band = author_serializers.SimpleBandSerializer(read_only=True)
     tracks = SimpleTrackSerializer(many=True, read_only=True)
     genres = SimpleGenreSerializer(many=True, read_only=True)
     article = AlbumArticleSerializer(source="albumarticle", read_only=True)
@@ -86,6 +86,7 @@ class CreateAlbumSerializer(serializers.ModelSerializer):
         model = Album
         fields = [
             'title',
+            'slug',
             'release_date',
             'release_type',
             'art_cover',
@@ -94,6 +95,7 @@ class CreateAlbumSerializer(serializers.ModelSerializer):
             'band',
             'genres'
         ]
+        read_only_fields = ['slug']
 
     def create(self, validated_data):
         validated_data = createUniqueSlug(Album, validated_data)

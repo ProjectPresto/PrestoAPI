@@ -33,8 +33,8 @@ class Album(models.Model):
     band = models.ForeignKey(
         Band, on_delete=models.PROTECT, null=True)
     art_cover = ResizedImageField(
-        size=[720, 720], upload_to=RenameImageToSlug("album/"), max_length=255, null=True)
-    art_cover_url = models.URLField(max_length=2048, null=True)
+        size=[720, 720], upload_to=RenameImageToSlug("album/"), max_length=255, null=True, blank=True)
+    art_cover_url = models.URLField(max_length=2048, null=True, blank=True)
     genres = models.ManyToManyField(Genre, related_name='album_genres', blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
