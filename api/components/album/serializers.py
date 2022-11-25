@@ -124,6 +124,15 @@ class CreateAlbumSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "An album must have an artist or a band as an author.")
 
+        # Check if this album is already in DB
+        if (len(Album.objects.filter(
+                title=self.validated_data['title'],
+                artist=self.validated_data['artist'],
+                band=self.validated_data['band']
+        )) > 0):
+            raise serializers.ValidationError(
+                "There is a album with the same title and author in database already")
+
         # Get user from JWT header
         user = self.context['request'].user
         if self.instance is None:
