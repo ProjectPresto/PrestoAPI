@@ -8,6 +8,7 @@ from .components.track import views as track_views
 from .components.genre import views as genre_views
 from .components.review import views as review_views
 from .components.article import views as article_views
+from .components.serviceLink import views as service_link_views
 
 router = routers.DefaultRouter()
 
@@ -44,6 +45,14 @@ router.register('band-article', article_views.BandArticleViewSet,
                 basename='band-article')
 router.register('track-article', article_views.TrackArticleViewSet,
                 basename='track-article')
+
+# SERVICE LINK
+router.register('album-service-link', service_link_views.AlbumServiceLinkViewSet,
+                basename='album-service-link')
+router.register('artist-service-link', service_link_views.ArtistServiceLinkViewSet,
+                basename='artist-service-link')
+router.register('band-service-link', service_link_views.BandServiceLinkViewSet,
+                basename='band-service-link')
 
 urlpatterns = router.urls
 

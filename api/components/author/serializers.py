@@ -8,6 +8,7 @@ from .models import Artist, Band, BandMember
 
 from .helpers import getGenres
 from ..genre.serializers import SimpleGenreSerializer
+from ..serviceLink.serializers import SimpleArtistServiceLinkSerializer, SimpleBandServiceLinkSerializer
 
 
 class AlbumInAuthorSerializer(serializers.ModelSerializer):
@@ -71,6 +72,7 @@ class BandSerializer(serializers.ModelSerializer):
     albums = serializers.SerializerMethodField()
     band_members = serializers.SerializerMethodField()
     article = BandArticleSerializer(source="bandarticle", read_only=True)
+    serviceLinks = SimpleBandServiceLinkSerializer(source="band_service_links", read_only=True, many=True)
 
     def get_genres(self, obj):
         return getGenres.get_genres(self, obj, 'band')
@@ -97,8 +99,9 @@ class BandSerializer(serializers.ModelSerializer):
             'bg_image_url',
             'genres',
             'albums',
-            'band_members',
             'article',
+            'serviceLinks',
+            'band_members',
             'created_at',
             'updated_at',
             'created_by',
@@ -196,6 +199,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     albums = serializers.SerializerMethodField()
     band_memberships = serializers.SerializerMethodField()
     article = ArtistArticleSerializer(source="artistarticle", read_only=True)
+    serviceLinks = SimpleArtistServiceLinkSerializer(source="artist_service_links", read_only=True, many=True)
 
     def get_albums(self, obj):
         request = self.context.get('request')
@@ -225,6 +229,7 @@ class ArtistSerializer(serializers.ModelSerializer):
             'genres',
             'albums',
             'article',
+            'serviceLinks',
             'band_memberships',
             'created_at',
             'updated_at',

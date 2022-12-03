@@ -1,20 +1,13 @@
-import datetime
-import logging
-import sys
-
+from django.db.models import Sum
 from rest_framework import serializers
-from django.template.defaultfilters import slugify
-from django.db.models.fields import DurationField
-from django.db.models import Sum, ExpressionWrapper
-from django.db.models.expressions import F
-from api.components.article.serializers import AlbumArticleSerializer
 
+from api.components.article.serializers import AlbumArticleSerializer
 from api.components.genre.serializers import SimpleGenreSerializer
 from api.components.track.models import Track
 from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
-
 from .models import Album
 from ..author import serializers as author_serializers
+from ..serviceLink.serializers import SimpleAlbumServiceLinkSerializer
 from ..track.serializers import SimpleTrackSerializer
 
 
@@ -25,6 +18,7 @@ class AlbumSerializer(serializers.ModelSerializer):
     genres = SimpleGenreSerializer(many=True, read_only=True)
     article = AlbumArticleSerializer(source="albumarticle", read_only=True)
     full_duration = serializers.SerializerMethodField()
+    serviceLinks = SimpleAlbumServiceLinkSerializer(source="album_service_links", read_only=True, many=True)
 
     def get_full_duration(self, obj):
         tracks_dur = Track.objects.filter(
@@ -49,6 +43,7 @@ class AlbumSerializer(serializers.ModelSerializer):
             'tracks',
             'genres',
             'article',
+            'serviceLinks',
             'created_at',
             'created_by',
             'updated_at',
