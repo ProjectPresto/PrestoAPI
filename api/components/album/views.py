@@ -24,7 +24,7 @@ class AlbumViewSet(ModelViewSet):
         'genres': ['exact'],
         'release_date': ['gte', 'lte', 'day__exact', 'month__exact'],
     }
-    ordering_fields = ['title', 'release_date']
+    ordering_fields = ['title', 'release_date', 'created_at']
     search_fields = ['title']
 
     def get_serializer_class(self):
