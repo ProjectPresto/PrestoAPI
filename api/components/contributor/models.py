@@ -1,8 +1,8 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django_resized import ResizedImageField
 
-from ...helpers.RenameImageToSlug import RenameImageToSlug
+from api.helpers.rename_image_to_slug import RenameImageToSlug
 
 
 class Contributor(models.Model):

@@ -1,10 +1,9 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django_resized import ResizedImageField
 
 from api.components.genre.models import Genre
-
-from ...helpers.RenameImageToSlug import RenameImageToSlug
+from api.helpers.rename_image_to_slug import RenameImageToSlug
 from ..author.models import Artist, Band
 
 

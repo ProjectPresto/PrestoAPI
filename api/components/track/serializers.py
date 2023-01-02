@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from .models import FeaturedAuthor, Track
+
 from api.components.author.serializers import SimpleArtistSerializer, SimpleBandSerializer
-from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
+from api.helpers.unique_slug import create_unique_slug, update_unique_slug
+from .models import FeaturedAuthor, Track
 
 
 class SimpleFeaturedAuthorSerializer(serializers.ModelSerializer):
@@ -88,11 +89,11 @@ class TrackSerializer(serializers.ModelSerializer):
         read_only_fields = ['slug', 'created_by', 'updated_by']
 
     def create(self, validated_data):
-        validated_data = createUniqueSlug(Track, validated_data)
+        validated_data = create_unique_slug(Track, validated_data)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Track, instance, validated_data)
+        validated_data = update_unique_slug(Track, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):

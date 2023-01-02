@@ -1,7 +1,7 @@
 from django.template.defaultfilters import slugify
 
 
-def createUniqueSlug(model, validated_data):
+def create_unique_slug(model, validated_data):
     if 'slug' not in validated_data:
         i = 0
         identifier = validated_data['name'] if 'name' in validated_data else validated_data['title']
@@ -14,7 +14,7 @@ def createUniqueSlug(model, validated_data):
     return validated_data
 
 
-def updateUniqueSlug(model, instance, validated_data):
+def update_unique_slug(model, instance, validated_data):
     if 'slug' not in validated_data and ('name' in validated_data or 'title' in validated_data):
         identifier = validated_data['name'] if 'name' in validated_data else validated_data['title']
         old_identifier = instance.name if hasattr(instance, 'name') else instance.title

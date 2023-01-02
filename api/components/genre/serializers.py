@@ -1,10 +1,8 @@
 from rest_framework import serializers
-from django.template.defaultfilters import slugify
+
 from api.components.album.models import Album
 from api.components.author.models import Artist, Band
-
-from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
-
+from api.helpers.unique_slug import create_unique_slug, update_unique_slug
 from .models import Genre
 
 
@@ -34,11 +32,11 @@ class GenreSerializer(serializers.ModelSerializer):
         read_only_fields = ['slug', 'created_by', 'updated_by']
 
     def create(self, validated_data):
-        validated_data = createUniqueSlug(Genre, validated_data)
+        validated_data = create_unique_slug(Genre, validated_data)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Genre, instance, validated_data)
+        validated_data = update_unique_slug(Genre, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):

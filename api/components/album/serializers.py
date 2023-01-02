@@ -4,7 +4,7 @@ from rest_framework import serializers
 from api.components.article.serializers import AlbumArticleSerializer
 from api.components.genre.serializers import SimpleGenreSerializer
 from api.components.track.models import Track
-from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
+from api.helpers.unique_slug import create_unique_slug, update_unique_slug
 from .models import Album
 from ..author import serializers as author_serializers
 from ..serviceLink.serializers import SimpleAlbumServiceLinkSerializer
@@ -93,12 +93,12 @@ class CreateAlbumSerializer(serializers.ModelSerializer):
         read_only_fields = ['slug']
 
     def create(self, validated_data):
-        validated_data = createUniqueSlug(Album, validated_data)
+        validated_data = create_unique_slug(Album, validated_data)
 
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Album, instance, validated_data)
+        validated_data = update_unique_slug(Album, instance, validated_data)
 
         return super().update(instance, validated_data)
 

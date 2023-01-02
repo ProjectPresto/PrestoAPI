@@ -2,11 +2,9 @@ from rest_framework import serializers
 
 from api.components.album.models import Album
 from api.components.article.serializers import ArtistArticleSerializer, BandArticleSerializer
-from api.helpers.UniqueSlug import createUniqueSlug, updateUniqueSlug
-
-from .models import Artist, Band, BandMember
-
+from api.helpers.unique_slug import create_unique_slug, update_unique_slug
 from .helpers import getGenres
+from .models import Artist, Band, BandMember
 from ..genre.serializers import SimpleGenreSerializer
 from ..serviceLink.serializers import SimpleArtistServiceLinkSerializer, SimpleBandServiceLinkSerializer
 
@@ -118,11 +116,11 @@ class BandSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        validated_data = createUniqueSlug(Band, validated_data)
+        validated_data = create_unique_slug(Band, validated_data)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Band, instance, validated_data)
+        validated_data = update_unique_slug(Band, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):
@@ -247,11 +245,11 @@ class ArtistSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        validated_data = createUniqueSlug(Artist, validated_data)
+        validated_data = create_unique_slug(Artist, validated_data)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = updateUniqueSlug(Artist, instance, validated_data)
+        validated_data = update_unique_slug(Artist, instance, validated_data)
         return super().update(instance, validated_data)
 
     def save(self, **kwargs):
